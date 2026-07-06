@@ -14,5 +14,5 @@ This project investigates regime-conditional attention head selection for time s
 
 ## Project Members
 
-- Didem Neda Aksaç
-- Betül Aydeğer
+- Didem Neda AksaÃ§
+- BetÃ¼l AydeÄŸer
