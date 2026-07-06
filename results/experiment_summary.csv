@@ -1,0 +1,1 @@
+experiment_id,model,dataset,seq_len,pred_len,n_heads,method,pruning_ratio,mse,mae,parameters,flops,inference_ms,seed
