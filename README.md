@@ -52,6 +52,34 @@ The analysis shows that several heads behave differently across regimes. For exa
 A 25% static pruning candidate set was created by selecting the six heads with the lowest overall importance.
 
 Static 25% head pruning improved validation MSE from 0.6781 to 0.6537, corresponding to a 3.60% reduction. However, on the held-out test set, MSE increased from 0.3725 to 0.3783, indicating a 1.55% degradation. Regime-level validation analysis showed that static pruning improved trend and residual regimes but degraded seasonal windows by 4.45%. This suggests that a single global pruning mask may not be optimal across all temporal regimes and motivates the proposed dynamic regime-aware head selection strategy.
+
+## Pruning and Regime-Aware Evaluation Experiments
+
+After selecting the B4 PatchTST baseline and completing the STL-based regime detection and attention head importance analysis, we evaluated several pruning and head selection strategies. The goal of these experiments was to test whether attention heads in the selected PatchTST model contain redundancy and whether regime-specific head selection can improve forecasting performance.
+
+### Experiment 04: Static 25% Head Pruning
+
+In this experiment, we evaluated a static pruning strategy using the head importance scores computed on the validation set. The six heads with the lowest overall importance scores were pruned from the B4 model, corresponding to 25% of all attention heads.
+
+The selected static pruning mask removed 6 out of 24 heads and kept 18 active heads. Validation results showed that static pruning improved the B4 baseline:
+
+| Setting | Active Heads | Pruned Heads | Validation MSE | Validation MAE |
+|---|---:|---:|---:|---:|
+| B4 no pruning | 24 | 0 | 0.6781 | 0.5551 |
+| Static 25% pruning | 18 | 6 | 0.6537 | 0.5507 |
+
+This corresponds to a 3.60% reduction in validation MSE. However, on the test set, static pruning increased the test MSE from 0.3725 to 0.3783. This suggests that the static pruning mask improves validation performance but does not generalize perfectly to unseen test data.
+
+### Experiment 05: Dynamic Regime-Aware 50% Keep
+
+The first dynamic regime-aware experiment used a more aggressive setting where each input window used only 50% of the attention heads. For each regime, trend, seasonal, and residual, the top 12 heads were selected based on regime-specific importance scores.
+
+Unlike static pruning, this approach applies a different mask depending on the regime label of each input window:
+
+```text
+trend window     -> trend-specific top 12 heads
+seasonal window  -> seasonal-specific top 12 heads
+residual window  -> residual-specific top 12 heads
 ## Project Members
 
 - Didem Neda Aksaç
