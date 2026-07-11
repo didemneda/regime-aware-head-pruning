@@ -43,6 +43,13 @@ A confidence margin was computed as the difference between the highest and secon
 - `etth1_validation_regime_summary.csv`: regime count and percentage summary.
 - `etth1_validation_confidence_summary.csv`: confidence statistics per regime.
 - `etth1_validation_regimes_confident_seq336.csv`: subset of windows with confidence margin >= 0.05.
+## Head Importance Analysis
+
+Head importance was measured by masking one attention head at a time and computing the change in validation MSE. Importance was computed globally and separately for trend, seasonal, and residual regimes.
+
+The analysis shows that several heads behave differently across regimes. For example, Layer 1 Head 1 has negative seasonal importance but positive residual importance, indicating that it is harmful for seasonal windows but useful for residual-dominant windows. This supports the motivation for regime-aware head selection instead of relying only on a single global pruning mask.
+
+A 25% static pruning candidate set was created by selecting the six heads with the lowest overall importance.
 ## Project Members
 
 - Didem Neda Aksaç
