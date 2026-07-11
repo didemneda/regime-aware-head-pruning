@@ -36,6 +36,13 @@ Validation windows were labeled using STL decomposition on the OT variable of ET
 | Seasonal | 292 | 10.48% |
 
 A confidence margin was computed as the difference between the highest and second-highest component scores. Using a threshold of 0.05, 2490 out of 2785 windows were considered confidently labeled.
+
+### Regime Detection Outputs
+
+- `etth1_validation_regimes_ot_seq336.csv`: regime label and STL scores for all 2785 validation windows.
+- `etth1_validation_regime_summary.csv`: regime count and percentage summary.
+- `etth1_validation_confidence_summary.csv`: confidence statistics per regime.
+- `etth1_validation_regimes_confident_seq336.csv`: subset of windows with confidence margin >= 0.05.
 ## Project Members
 
 - Didem Neda Aksaç
