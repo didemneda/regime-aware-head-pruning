@@ -24,6 +24,18 @@ We evaluated several PatchTST configurations on ETTh1 with a prediction horizon 
 | B4 | 336 | 128 | 8 | 0.6735 | 0.3725 | 0.3982 |
 
 B4 was selected as the main pruning baseline because it provides 24 total attention heads while maintaining competitive forecasting performance.
+
+## Regime Detection
+
+Validation windows were labeled using STL decomposition on the OT variable of ETTh1. Each input window of length 336 was decomposed into trend, seasonal, and residual components. The dominant regime was assigned based on the component with the highest normalized variance.
+
+| Regime | Windows | Percentage |
+|---|---:|---:|
+| Trend | 2134 | 76.62% |
+| Residual | 359 | 12.89% |
+| Seasonal | 292 | 10.48% |
+
+A confidence margin was computed as the difference between the highest and second-highest component scores. Using a threshold of 0.05, 2490 out of 2785 windows were considered confidently labeled.
 ## Project Members
 
 - Didem Neda Aksaç
