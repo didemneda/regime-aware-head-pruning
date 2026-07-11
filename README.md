@@ -50,6 +50,8 @@ Head importance was measured by masking one attention head at a time and computi
 The analysis shows that several heads behave differently across regimes. For example, Layer 1 Head 1 has negative seasonal importance but positive residual importance, indicating that it is harmful for seasonal windows but useful for residual-dominant windows. This supports the motivation for regime-aware head selection instead of relying only on a single global pruning mask.
 
 A 25% static pruning candidate set was created by selecting the six heads with the lowest overall importance.
+
+Static 25% head pruning improved validation MSE from 0.6781 to 0.6537, corresponding to a 3.60% reduction. However, on the held-out test set, MSE increased from 0.3725 to 0.3783, indicating a 1.55% degradation. Regime-level validation analysis showed that static pruning improved trend and residual regimes but degraded seasonal windows by 4.45%. This suggests that a single global pruning mask may not be optimal across all temporal regimes and motivates the proposed dynamic regime-aware head selection strategy.
 ## Project Members
 
 - Didem Neda Aksaç
