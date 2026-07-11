@@ -57,7 +57,7 @@ Static 25% head pruning improved validation MSE from 0.6781 to 0.6537, correspon
 
 After selecting the B4 PatchTST baseline and completing the STL-based regime detection and attention head importance analysis, we evaluated several pruning and head selection strategies. The goal of these experiments was to test whether attention heads in the selected PatchTST model contain redundancy and whether regime-specific head selection can improve forecasting performance.
 
-### Experiment 04: Static 25% Head Pruning
+## Experiment 04: Static 25% Head Pruning
 
 In this experiment, we evaluated a static pruning strategy using the head importance scores computed on the validation set. The six heads with the lowest overall importance scores were pruned from the B4 model, corresponding to 25% of all attention heads.
 
@@ -70,16 +70,65 @@ The selected static pruning mask removed 6 out of 24 heads and kept 18 active he
 
 This corresponds to a 3.60% reduction in validation MSE. However, on the test set, static pruning increased the test MSE from 0.3725 to 0.3783. This suggests that the static pruning mask improves validation performance but does not generalize perfectly to unseen test data.
 
-### Experiment 05: Dynamic Regime-Aware 50% Keep
+## Experiment 05: Dynamic Regime-Aware 50% Keep
 
 The first dynamic regime-aware experiment used a more aggressive setting where each input window used only 50% of the attention heads. For each regime, trend, seasonal, and residual, the top 12 heads were selected based on regime-specific importance scores.
 
 Unlike static pruning, this approach applies a different mask depending on the regime label of each input window:
 
-```text
+
 trend window     -> trend-specific top 12 heads
 seasonal window  -> seasonal-specific top 12 heads
 residual window  -> residual-specific top 12 heads
+
+Validation results showed that dynamic 50% keep improved the baseline but underperformed static pruning:
+
+Setting	Active Heads	Pruned Heads	Validation MSE	Validation MAE
+B4 no pruning	24	0	0.6781	0.5551
+Dynamic 50% keep	12	12	0.6678	0.5553
+
+Dynamic 50% keep reduced validation MSE by 1.51% compared to the unpruned baseline. However, regime-level analysis showed that this setting degraded seasonal and residual windows. Since it pruned 50% of the heads, this setting was considered too aggressive for a fair comparison against static 25% pruning.
+
+## Experiment 06: Dynamic Regime-Aware 75% Keep
+
+To make the dynamic method comparable with static 25% pruning, we evaluated a second dynamic setting with 75% keep ratio. In this setting, each regime-specific mask keeps 18 heads and prunes 6 heads, matching the same pruning ratio as the static 25% pruning experiment.
+
+Setting	Active Heads	Pruned Heads	Validation MSE	Validation MAE
+B4 no pruning	24	0	0.6781	0.5551
+Static 25% pruning	18	6	0.6537	0.5507
+Dynamic 50% keep	12	12	0.6678	0.5553
+Dynamic 75% keep	18	6	0.6597	0.5512
+
+Dynamic 75% keep improved validation MSE by 2.71% compared to the unpruned B4 baseline. It also performed better than the dynamic 50% setting, confirming that the 50% keep ratio was too aggressive. However, static 25% pruning still achieved the best validation result.
+
+Regime-level validation analysis showed that dynamic 75% keep mainly improved trend-dominant windows while slightly degrading seasonal and residual windows. This indicates that regime-aware selection provides useful signals, but the current head selection strategy is still not optimal across all regimes.
+
+## Experiment 07: Test Regime Detection and Dynamic 75% Test Evaluation
+
+Since dynamic selection requires a regime label for each input window, we generated STL-based regime labels for the ETTh1 test windows. The test set was highly imbalanced toward the trend regime:
+
+Regime	Count	Percentage
+Trend	2606	93.57%
+Seasonal	125	4.49%
+Residual	54	1.94%
+
+After generating test regime labels, we evaluated the dynamic 75% keep strategy on the test set and compared it with the unpruned B4 baseline and static 25% pruning.
+
+Setting	Active Heads	Pruned Heads	Test MSE	Test MAE
+B4 no pruning	24	0	0.3725	0.3982
+Static 25% pruning	18	6	0.3783	0.4044
+Dynamic 75% keep	18	6	0.3794	0.4053
+
+On the test set, the unpruned B4 model achieved the best performance. Static 25% pruning increased test MSE by 1.55%, while dynamic 75% keep increased test MSE by 1.83%. Regime-level test analysis showed that dynamic 75% keep improved residual-dominant windows but degraded trend and seasonal windows. Since the test set is overwhelmingly trend-dominant, the trend degradation dominated the overall test result.
+
+## Summary of Findings
+
+The pruning experiments show that attention head redundancy exists in the selected PatchTST baseline, especially on the validation set. Both static pruning and dynamic regime-aware selection improved validation MSE compared to the unpruned B4 baseline.
+
+However, test-set evaluation showed that these improvements do not fully generalize to unseen data. The unpruned B4 model remained the best on the test set. The dynamic regime-aware strategy improved residual windows on the test set, but this improvement was not enough to improve the overall test score due to the highly trend-dominant test distribution.
+
+Overall, the current results suggest that regime-aware head selection is a promising direction, but the current single-head importance based mask construction is not sufficient for robust test generalization. Future work should focus on more stable regime labeling, joint head selection, fine-tuning after pruning, and evaluating the method on additional datasets such as ETTm1 and Weather.
+
 ## Project Members
 
 - Didem Neda Aksaç
