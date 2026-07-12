@@ -1,26 +1,53 @@
 experiment:
-  id: patchtst_etth1_336_96_baseline
+  id: B4_patchtst_etth1_336_dm128_h8
   seed: 2026
+  description: Selected pruning baseline (see README Baseline Selection table)
+  selected_for_pruning: true
 
 model:
   name: PatchTST
   seq_len: 336
   pred_len: 96
   label_len: 48
-  d_model: 64
-  d_ff: 128
-  n_heads: 4
-  e_layers: 1
+  d_model: 128
+  d_ff: 256
+  n_heads: 8
+  e_layers: 3
+  d_layers: 1
+  factor: 3
+  dropout: 0.1
+  patch_len: 16
+  stride: 8
+  padding_patch: end
+  revin: 1
+  affine: 0
+  subtract_last: 0
+  decomposition: 0
+  moving_avg: 25
+  # 8 heads x 3 encoder layers = 24 total attention heads (pruning unit)
 
 data:
   name: ETTh1
+  root_path: ./dataset/ETDataset/ETT-small/
+  data_path: ETTh1.csv
   features: M
+  target: OT
+  freq: h
   enc_in: 7
   dec_in: 7
   c_out: 7
 
 training:
-  batch_size: 16
-  train_epochs: 1
-  patience: 1
+  batch_size: 32
+  train_epochs: 10
+  best_epoch: 7
+  patience: 3
   learning_rate: 0.0001
+  loss: MSE
+  lradj: type1
+  optimizer: Adam
+
+results:
+  best_val_loss: 0.6734824
+  test_mse: 0.37254568934440613
+  test_mae: 0.3982141613960266
