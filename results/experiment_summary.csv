@@ -1,1 +1,11 @@
 experiment_id,model,dataset,seq_len,pred_len,n_heads,method,pruning_ratio,mse,mae,parameters,flops,inference_ms,seed
+B4_no_pruning,PatchTST,ETTh1,336,96,8,no_pruning,0.0,0.3725,0.3982,915936,120873984,0.2806,2026
+B4_static_pruning_25,PatchTST,ETTh1,336,96,8,static_global_importance,0.25,0.3783,0.4044,866496,106423296,0.2783,2026
+B4_dynamic_regime_aware_75_keep_independent,PatchTST,ETTh1,336,96,8,dynamic_regime_aware_independent_scoring,0.25,0.3794,0.4053,866496,106423296,,2026
+B4_random_pruning_25,PatchTST,ETTh1,336,96,8,random_pruning_5seed_mean,0.25,0.3799,0.4026,866496,106423296,,2026
+B4_magnitude_pruning_25,PatchTST,ETTh1,336,96,8,magnitude_based_pruning,0.25,0.3810,0.4044,866496,106423296,,2026
+B4_static_pruning_25_finetuned,PatchTST,ETTh1,336,96,8,static_global_importance_finetuned,0.25,0.3783,0.4044,866496,106423296,0.2783,2026
+B4_dynamic_regime_aware_75_keep_joint,PatchTST,ETTh1,336,96,8,dynamic_regime_aware_joint_greedy,0.25,0.3774,0.4028,866496,106423296,0.2994,2026
+ETTm1_no_pruning,PatchTST,ETTm1,336,96,8,no_pruning,0.0,0.2876,0.3449,915936,120873984,,2026
+ETTm1_static_pruning_25,PatchTST,ETTm1,336,96,8,static_global_importance,0.25,0.2980,0.3488,866496,106423296,,2026
+ETTm1_dynamic_regime_aware_75_keep_joint,PatchTST,ETTm1,336,96,8,dynamic_regime_aware_joint_greedy,0.25,0.2889,0.3450,866496,106423296,,2026
