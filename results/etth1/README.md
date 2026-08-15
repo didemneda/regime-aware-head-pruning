@@ -52,3 +52,22 @@ Static masks showed more stable latency across seeds.
 Absolute latency measurements may vary between GPU sessions.
 The mask-shape table should be interpreted as a within-session
 sensitivity comparison.
+
+## Statistical uncertainty
+
+A hierarchical circular moving-block bootstrap was applied to the paired
+test-window losses. The analysis resampled both the five training seeds and
+temporal blocks within each seed. The primary block length was 96 windows,
+with 10,000 bootstrap replicates.
+
+Dynamic pruning achieved lower mean errors than static pruning:
+
+- MSE difference: -0.000801, 95% CI [-0.003509, 0.002390]
+- MAE difference: -0.001478, 95% CI [-0.003502, 0.000948]
+
+Both confidence intervals included zero. The advantage of dynamic pruning
+over static pruning was therefore not statistically conclusive.
+
+Both dynamic and static pruning produced significantly higher MSE and MAE
+than the unpruned baseline. These conclusions remained unchanged for block
+lengths of 24, 96, and 168 windows.

@@ -81,5 +81,56 @@
       "sha256": "1437cd5aa08cc9ee522067b7b8fd467733dd71d95d5f43df96e7792907e99776"
     }
   ],
-  "checkpoints_included_in_repository": false
+  "checkpoints_included_in_repository": false,
+  "statistical_analysis": {
+    "method": "hierarchical_circular_moving_block_bootstrap",
+    "difference_definition": "left_method_minus_right_method",
+    "seeds": [
+      7,
+      42,
+      1234,
+      2026,
+      3407
+    ],
+    "primary_block_length": 96,
+    "sensitivity_block_lengths": [
+      24,
+      96,
+      168
+    ],
+    "bootstrap_replicates": 10000,
+    "confidence_level": 0.95,
+    "result_files": [
+      {
+        "file": "results/etth1/statistics/block_bootstrap_pairwise.csv",
+        "size_bytes": 1477,
+        "sha256": "243d517381c87f68bae7534204537a4d70e30be8555813d9d2d8fc0dff8998f6"
+      },
+      {
+        "file": "results/etth1/statistics/block_bootstrap_sensitivity.csv",
+        "size_bytes": 3896,
+        "sha256": "e077dac62d6fc420a310d7a7803ae045e3355816c7d15ac651d278a6bdbc84b9"
+      },
+      {
+        "file": "results/etth1/statistics/block_bootstrap_per_seed_effects.csv",
+        "size_bytes": 2435,
+        "sha256": "4cb425b052813634dc1abd4f1bd05363cbed7bed58784d8ab50170c85959fc89"
+      },
+      {
+        "file": "results/etth1/statistics/block_bootstrap_robustness.csv",
+        "size_bytes": 685,
+        "sha256": "4fba628607085a874ef8eb2c362242996d1729d8973c816a78cab2126545abae"
+      },
+      {
+        "file": "results/etth1/statistics/block_bootstrap_metadata.json",
+        "size_bytes": 485,
+        "sha256": "aef51e0ea7bed6abc28f74eb148efa1e1086ca3d1b9002d393521f8aebbc6628"
+      },
+      {
+        "file": "results/etth1/statistics/block_bootstrap_summary.md",
+        "size_bytes": 895,
+        "sha256": "770aec243a1bcae1df2bf4ee2dfb84cc18f6f1a26dc42e38d9802fb4a3444301"
+      }
+    ]
+  }
 }
