@@ -1,0 +1,136 @@
+{
+  "created_at_utc": "2026-08-15T12:03:33.273184+00:00",
+  "repository": {
+    "branch": "feat/reproducible-pipeline",
+    "base_commit": "74f2a82641909970e80ebdca4d0929d193df5ade"
+  },
+  "external_dependencies": {
+    "time_series_library": {
+      "repository": "https://github.com/thuml/Time-Series-Library.git",
+      "commit": "4e938a1767106324dd753b2a44832bf870a0252e"
+    }
+  },
+  "dataset": {
+    "name": "ETTh1",
+    "path_used_during_experiment": "/content/drive/MyDrive/BIL401_Regime_Head_Pruning/data/ETTh1.csv",
+    "sha256": "f18de3ad269cef59bb07b5438d79bb3042d3be49bdeecf01c1cd6d29695ee066",
+    "included_in_repository": false
+  },
+  "experiment": {
+    "model": "PatchTST",
+    "seq_len": 336,
+    "pred_len": 96,
+    "seeds": [
+      7,
+      42,
+      1234,
+      2026,
+      3407
+    ],
+    "pruning_ratio": 0.25,
+    "validation_shuffle": false,
+    "test_shuffle": false
+  },
+  "result_files": [
+    {
+      "file": "results/etth1/baseline/baseline_multiseed_summary.csv",
+      "source": "/content/drive/MyDrive/BIL401_Regime_Head_Pruning/multiseed/ETTh1/baseline_multiseed_summary.csv",
+      "size_bytes": 3523,
+      "sha256": "ce1212153bd8333b33d686115adfaa82c3a7def2cee2ac8f9d201fef07ac5be3"
+    },
+    {
+      "file": "results/etth1/pruning/pruning_multiseed_summary.csv",
+      "source": "/content/drive/MyDrive/BIL401_Regime_Head_Pruning/multiseed/ETTh1/pruning/pruning_multiseed_summary.csv",
+      "size_bytes": 4171,
+      "sha256": "ef069b4e07cdc34d5efb37494295567da0607ea00c23a4940f1832da0e057bfa"
+    },
+    {
+      "file": "results/etth1/deployment_efficiency/model_parameters_flops_storage.csv",
+      "source": "/content/drive/MyDrive/BIL401_Regime_Head_Pruning/multiseed/ETTh1/pruning/deployment_efficiency/model_parameters_flops_storage.csv",
+      "size_bytes": 616,
+      "sha256": "6482a860b42b24b14cf4eef1a80a7230fdfdd313c942b5971aedb273d7c8ee2d"
+    },
+    {
+      "file": "results/etth1/deployment_efficiency/honest_deployment_summary.csv",
+      "source": "/content/drive/MyDrive/BIL401_Regime_Head_Pruning/multiseed/ETTh1/pruning/deployment_efficiency/honest_deployment_summary.csv",
+      "size_bytes": 1348,
+      "sha256": "ad919d63056758f02705dc5e5c5a19a2d44043f39357e5f0990e7c4a3cc235b9"
+    },
+    {
+      "file": "results/etth1/deployment_efficiency/mask_layer_distribution_5seeds.csv",
+      "source": "/content/drive/MyDrive/BIL401_Regime_Head_Pruning/multiseed/ETTh1/pruning/deployment_efficiency/mask_layer_distribution_5seeds.csv",
+      "size_bytes": 629,
+      "sha256": "d7ee23cb02c78d2ec5fcf20a78071ce9e8278b305b755cdd39ec8b21b4985eff"
+    },
+    {
+      "file": "results/etth1/deployment_efficiency/mask_shape_latency_5seeds.csv",
+      "source": "/content/drive/MyDrive/BIL401_Regime_Head_Pruning/multiseed/ETTh1/pruning/deployment_efficiency/mask_shape_latency_5seeds.csv",
+      "size_bytes": 1892,
+      "sha256": "d03b7e705010798c35cc2ad192210648dafb73dcaefc3e6cf0789850dd04478a"
+    },
+    {
+      "file": "results/etth1/deployment_efficiency/static_dynamic_latency_5seeds.csv",
+      "source": "/content/drive/MyDrive/BIL401_Regime_Head_Pruning/multiseed/ETTh1/pruning/deployment_efficiency/static_dynamic_latency_5seeds.csv",
+      "size_bytes": 367,
+      "sha256": "7935062eca3cffdea8aa928954ad5f661cdbaa55f1460f3b0129040f0af59179"
+    },
+    {
+      "file": "results/etth1/deployment_efficiency/static_dynamic_latency_mean_std.csv",
+      "source": "/content/drive/MyDrive/BIL401_Regime_Head_Pruning/multiseed/ETTh1/pruning/deployment_efficiency/static_dynamic_latency_mean_std.csv",
+      "size_bytes": 225,
+      "sha256": "1437cd5aa08cc9ee522067b7b8fd467733dd71d95d5f43df96e7792907e99776"
+    }
+  ],
+  "checkpoints_included_in_repository": false,
+  "statistical_analysis": {
+    "method": "hierarchical_circular_moving_block_bootstrap",
+    "difference_definition": "left_method_minus_right_method",
+    "seeds": [
+      7,
+      42,
+      1234,
+      2026,
+      3407
+    ],
+    "primary_block_length": 96,
+    "sensitivity_block_lengths": [
+      24,
+      96,
+      168
+    ],
+    "bootstrap_replicates": 10000,
+    "confidence_level": 0.95,
+    "result_files": [
+      {
+        "file": "results/etth1/statistics/block_bootstrap_pairwise.csv",
+        "size_bytes": 1477,
+        "sha256": "243d517381c87f68bae7534204537a4d70e30be8555813d9d2d8fc0dff8998f6"
+      },
+      {
+        "file": "results/etth1/statistics/block_bootstrap_sensitivity.csv",
+        "size_bytes": 3896,
+        "sha256": "e077dac62d6fc420a310d7a7803ae045e3355816c7d15ac651d278a6bdbc84b9"
+      },
+      {
+        "file": "results/etth1/statistics/block_bootstrap_per_seed_effects.csv",
+        "size_bytes": 2435,
+        "sha256": "4cb425b052813634dc1abd4f1bd05363cbed7bed58784d8ab50170c85959fc89"
+      },
+      {
+        "file": "results/etth1/statistics/block_bootstrap_robustness.csv",
+        "size_bytes": 685,
+        "sha256": "4fba628607085a874ef8eb2c362242996d1729d8973c816a78cab2126545abae"
+      },
+      {
+        "file": "results/etth1/statistics/block_bootstrap_metadata.json",
+        "size_bytes": 485,
+        "sha256": "aef51e0ea7bed6abc28f74eb148efa1e1086ca3d1b9002d393521f8aebbc6628"
+      },
+      {
+        "file": "results/etth1/statistics/block_bootstrap_summary.md",
+        "size_bytes": 895,
+        "sha256": "770aec243a1bcae1df2bf4ee2dfb84cc18f6f1a26dc42e38d9802fb4a3444301"
+      }
+    ]
+  }
+}

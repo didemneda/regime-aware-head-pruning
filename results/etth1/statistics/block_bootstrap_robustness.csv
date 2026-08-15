@@ -1,0 +1,7 @@
+metric,left_method,right_method,block_lengths_tested,distinct_conclusions,all_ci_exclude_zero,min_ci_low,max_ci_high,robust_to_block_length
+mae,dynamic_joint_25,static_25,3,1,False,-0.003551185527028574,0.001038847221296374,True
+mae,dynamic_joint_25,unpruned_baseline,3,1,True,0.0032821962607800133,0.005885471415442494,True
+mae,static_25,unpruned_baseline,3,1,True,0.003761809511522368,0.008348304089106594,True
+mse,dynamic_joint_25,static_25,3,1,False,-0.0036603681458008976,0.0023899408920616313,True
+mse,dynamic_joint_25,unpruned_baseline,3,1,True,0.00449730424656525,0.00812342052452308,True
+mse,static_25,unpruned_baseline,3,1,True,0.004062918996339253,0.010105204642841623,True

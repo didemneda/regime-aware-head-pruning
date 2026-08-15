@@ -1,0 +1,48 @@
+dataset:
+  name: ETTh1
+  file: ETTh1.csv
+  sha256: f18de3ad269cef59bb07b5438d79bb3042d3be49bdeecf01c1cd6d29695ee066
+
+model:
+  name: PatchTST
+  task_name: long_term_forecast
+  features: M
+  seq_len: 336
+  label_len: 48
+  pred_len: 96
+  enc_in: 7
+  dec_in: 7
+  c_out: 7
+  e_layers: 3
+  d_layers: 1
+  d_model: 128
+  d_ff: 256
+  n_heads: 8
+  factor: 3
+  dropout: 0.1
+  fc_dropout: 0.3
+  head_dropout: 0.0
+  patch_len: 16
+  stride: 8
+
+training:
+  batch_size: 32
+  epochs: 10
+  patience: 3
+  learning_rate: 0.0001
+  seeds: [7, 42, 1234, 2026, 3407]
+  deterministic: true
+
+pruning:
+  pruning_ratio: 0.25
+  total_attention_heads: 24
+  pruned_heads: 6
+  active_heads: 18
+  methods:
+    - unpruned_baseline
+    - static_25
+    - dynamic_joint_25
+
+external:
+  time_series_library_repository: https://github.com/thuml/Time-Series-Library.git
+  time_series_library_commit: 4e938a1767106324dd753b2a44832bf870a0252e
