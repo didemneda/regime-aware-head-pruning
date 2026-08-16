@@ -1,0 +1,63 @@
+% Introduction — ReCAHS paper
+
+\section{Introduction}
+\label{sec:intro}
+
+Transformer forecasters such as PatchTST \citep{nie2023patchtst} and
+iTransformer \citep{liu2024itransformer} dominate long-term time-series
+benchmarks, yet much of their multi-head attention is redundant: a
+substantial fraction of heads can be removed with little loss
+\citep{michel2019sixteen,voita2019analyzing}. The standard recipe scores
+each head with one global importance value and prunes the lowest-scoring
+ones. Time series, however, are not homogeneous: windows alternate between
+trend-dominant, seasonal-dominant and noise-dominant \emph{regimes}, and a
+head that is useful in one regime can be harmful in another. This suggests
+a regime-conditional policy --- detect the regime of each input window and
+activate the head subset selected for that regime --- an instance of
+input-conditional computation \citep{han2021dynamic} applied to head
+sparsity.
+
+Prior comparisons of dynamic against static pruning share a structural
+weakness: the dynamic method and its static baseline differ
+simultaneously in \emph{how} masks are selected and in \emph{whether}
+they adapt to the input, so the observed gains cannot be attributed to
+adaptivity. We conduct, to our knowledge, the first controlled study that
+separates these factors, on a grid of 4~datasets $\times$ 4~horizons
+$\times$ 5~seeds $\times$ 6~sparsity levels (${\sim}9{,}300$ masked
+evaluations), with per-window losses stored for every configuration so
+that all statistics are recomputable offline.
+
+Our contributions:
+\begin{enumerate}
+  \item \textbf{Fragility of the standard method.} Global importance
+  ranking degrades sharply at realistic sparsity and is beaten by
+  \emph{random} pruning on minute-resolution data; greedy backward
+  elimination (joint selection) stays within ${\sim}1\%$ of the unpruned
+  model at $25\%$ sparsity and degrades gracefully to $75\%$
+  (Sec.~\ref{sec:results-sweep}).
+  \item \textbf{Controlled attribution.} Regime-routed selection beats
+  the standard static baseline in up to $15/16$ cells (sign test
+  $p{=}5\times10^{-4}$), but a pooled greedy mask --- same criterion, no
+  regime conditioning --- reverses the comparison: the criterion, not the
+  routing, explains the gain (Sec.~\ref{sec:results-attribution}).
+  \item \textbf{The routing headroom is real but aleatoric.} A per-window
+  oracle over the regime masks beats even the \emph{unpruned} model in
+  $15/16$ cells (up to $-12\%$), yet twelve deployable routers ---
+  STL-based, learned, bandit, gated, representation-based --- fail to
+  capture it. Near-oracle in-sample fits, flat $10\times$ learning curves
+  and failed zero-shift diagnostics locate the failure in the signal, not
+  the router (Sec.~\ref{sec:results-routing}).
+  \item \textbf{Combination instead of selection.} Averaging the
+  specialist masks' predictions beats the best static mask on all four
+  datasets and surpasses the unpruned model on two; a soft-routing
+  $\alpha$-sweep shows performance \emph{increases} as trust in the
+  regime label decreases. An ablation attributes the gain to mask
+  diversity, for which regime partitioning is the strongest but not a
+  necessary source (Sec.~\ref{sec:results-ensemble}).
+  \item \textbf{Practical results.} With the mask imposed from scratch
+  during training, $25\%$ head pruning is free ($-5.4\%$ parameters,
+  $-12\%$ FLOPs); a $12$-feature classifier replaces per-window STL
+  detection at $45\times$ lower latency with no end-to-end accuracy loss;
+  and the findings transfer with a precise boundary to iTransformer's
+  cross-variate attention (Sec.~\ref{sec:results-itr}).
+\end{enumerate}

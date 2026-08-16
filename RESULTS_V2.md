@@ -52,6 +52,56 @@ Code: [`cluster/`](cluster/) · Raw results incl. per-window losses:
    head rankings barely correlate (τ≈0.05) — head roles are per-model,
    so masks must be selected per model.
 
+## The router study (post-oracle follow-up)
+
+Can *any* inference-time-legal method capture the oracle headroom? Twelve
+deployable variants, all compared against pooled static-greedy over the
+16 cells (oracle-gain recovery in parentheses):
+
+| Family | Best variant | Wins /16 | Recovery |
+|---|---|---:|---:|
+| STL / learned regime labels | detector (45× faster) | 1 | <0 |
+| Argmin classification | margin-weighted HGB | 2 | −31% |
+| Loss / regret regression | centered delta_reg | 1 | −33% |
+| Delayed-feedback temporal | rolling regret | 3 | −21% |
+| Slow-timescale bandits | block-96 | 5 | −14% |
+| Regret-gated deviation | gate@q95 | 6 | −3% |
+| **Prediction ensembling** | **top2 / invmse** | **top2: 4/4 datasets** | **+6 to +9%** |
+
+Three falsification tests rule out fixable causes of router failure:
+in-sample fits reach 96% of oracle (capacity is sufficient); a 10× router
+learning curve is flat on held-out regret (not data-limited); a
+train-on-test-half diagnostic and model-representation features also fail
+(not distribution shift, not feature poverty). Per-window best-mask
+identity is aleatoric at inference time.
+
+**Ensembling is the constructive answer**: averaging the masked
+specialists' *predictions* (uniform, val-weighted, or top-2) beats pooled
+static-greedy on 3–4 of 4 datasets at horizon 96, recovers +6–9% of the
+oracle gain, ties the unpruned baseline on ETTm1 and **beats it on ETTh2
+(0.3070 vs 0.3140)** — don't select, combine. Its one failure (weather) is
+mechanistically informative: 97%-seasonal labels make the regime masks
+nearly identical, leaving no diversity to average.
+
+**Soft regime-conditioned ensembles close the question.** Giving the
+STL-detected regime's mask weight α (others share 1−α): recovery falls
+monotonically in α — +9.2% (α=0.4) → +7.4% (0.6) → +1.8% (0.8) → negative
+(1.0 = hard routing) — and the α=0.4 / regime-inverse-MSE variants merely
+tie the regime-blind weighted ensemble (2/4 datasets each way). Regime
+information adds no measurable value at inference time, even softly; its
+real contribution is *offline*, in constructing the diverse specialist
+masks the ensemble averages.
+
+**Diversity-source ablation (closed):** pools of greedy masks selected on
+random validation subsamples (same criterion, size, keep-count, no regime
+information) ensemble about as well as regime pools on average (regime
+wins 2/4 datasets, random 2/4 — random even beats the unpruned baseline
+on ETTm1: 0.2909 vs 0.2920), but regime pools have systematically deeper
+oracles (4/4 datasets, e.g. ETTh2 0.2730 vs 0.2978). Regime partitioning
+is the strongest diversity *source* — its extra oracle depth is exactly
+the aleatoric part no method exploits — yet not necessary for the
+deployable ensemble gains: the ensemble effect is a diversity effect.
+
 ## Statistical toolkit
 
 Per-seed paired tests + cross-cell sign tests; hierarchical circular

@@ -1,0 +1,81 @@
+% Conclusion and Future Work — ReCAHS paper (07)
+
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+We set out to test a natural hypothesis --- that attention-head
+importance in time-series Transformers depends on the temporal regime of
+the input, and that regime-conditional head selection should therefore
+beat a single static mask --- and subjected it to what we believe is the
+first criterion-controlled evaluation of dynamic pruning, over
+$16$ dataset$\times$horizon cells, $5$ seeds and $6$ sparsity levels.
+
+The hypothesis survives in a sharper, redistributed form. Regime-dependent
+head structure is real within every trained model, and a per-window
+oracle over regime-specialist masks outperforms even the unpruned
+network almost everywhere. But none of that value is accessible through
+selection at inference time: once the selection criterion is held fixed,
+regime routing adds nothing on temporal-patch attention, and a hierarchy
+of twelve routers together with capacity, data-scaling and
+distribution-shift diagnostics shows the per-window optimal mask to be
+aleatoric. What routing cannot capture, combination partially can:
+averaging the specialists' predictions beats every router and the best
+static mask, and surpasses the unpruned model on two of four datasets ---
+a diversity effect for which regime partitioning is the strongest, though
+not a necessary, source.
+
+Alongside this analysis the study yields directly usable results: joint
+greedy selection replaces the fragile global-importance ranking at no
+extra conceptual cost; $25\%$ of heads can be removed for free when the
+mask is imposed during training; a lightweight learned detector removes
+the $45\times$ STL bottleneck from any regime-aware deployment; and the
+conclusions transfer to iTransformer with a precise, mechanistically
+interpretable boundary --- cross-variate attention retains a small
+genuine routing benefit that temporal attention does not.
+
+More broadly, our results argue that claims about input-conditional
+sparsity should be required to pass two tests they rarely face: a
+selection-criterion-matched static control, and an oracle-normalized
+account of how much adaptive headroom exists and how much is actually
+recovered. We release per-window losses for every configuration to make
+such tests cheap for future work.
+
+Our findings reframe rather than close the adaptive-sparsity
+question, and point to four directions for future work.
+
+\paragraph{Train the specialists to be routable.}
+The masks we route between are found \emph{post hoc} on a model never
+trained to be routable, so their per-window advantages are accidental ---
+which is exactly what the aleatoric result reflects. Learning head gates
+end-to-end (a mixture-of-head-experts with a load-balancing objective, in
+the spirit of conditional-computation architectures
+\citep{han2021dynamic,rao2021dynamicvit}) would make routing signal
+learnable by construction, and our oracle-normalized evaluation provides
+the yardstick for whether trained routability closes the gap that
+post-hoc routing cannot.
+
+\paragraph{Characterize the aleatoric residual.}
+The oracle gap behaves like noise to every predictor we tried, but a
+formal account is missing: under what conditions on the mask-perturbation
+covariance and the target noise is per-window mask identity
+information-theoretically unpredictable, and how does the recoverable
+fraction scale with mask diversity? The released per-window losses make
+this a data-analysis problem rather than a training problem.
+
+\paragraph{Exploit the boundary.}
+Cross-variate attention retained a genuine routing benefit where temporal
+attention did not. Testing whether this persists on strongly multivariate
+benchmarks (ECL, Traffic, larger Weather horizons), across capacity
+budgets, and for other inverted or hybrid architectures would turn a
+single boundary observation into a design principle for where adaptive
+head sparsity is worth building.
+
+\paragraph{Cheaper and richer conditioning signals.}
+STL regimes are one coarse conditioning variable. Change-point detectors,
+learned soft regime embeddings, or exogenous covariates may induce
+specialist pools with deeper \emph{and more exploitable} structure; the
+diversity ablation suggests evaluating any such proposal on two axes ---
+realized ensemble gain and oracle depth --- rather than on routing
+accuracy alone. On the systems side, the top-$2$ ensemble's $2\times$
+forward cost can likely be reduced by sharing computation between masks
+that differ in only a few heads.

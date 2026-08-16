@@ -1,0 +1,160 @@
+% References for the ReCAHS paper.
+% Entries marked [PDF] have the paper in papers/ and were verified there.
+
+% ---------------- head pruning: static / importance-based ----------------
+
+@inproceedings{michel2019sixteen,
+  title     = {Are Sixteen Heads Really Better than One?},
+  author    = {Michel, Paul and Levy, Omer and Neubig, Graham},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2019},
+  note      = {[PDF] papers/NeurIPS-2019-are-sixteen-heads-really-better-than-one-Paper.pdf}
+}
+
+@inproceedings{voita2019analyzing,
+  title     = {Analyzing Multi-Head Self-Attention: Specialized Heads Do the Heavy Lifting, the Rest Can Be Pruned},
+  author    = {Voita, Elena and Talbot, David and Moiseev, Fedor and Sennrich, Rico and Titov, Ivan},
+  booktitle = {Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2019},
+  note      = {[PDF] papers/P19-1580.pdf}
+}
+
+@article{li2021differentiable,
+  title   = {Differentiable Subset Pruning of Transformer Heads},
+  author  = {Li, Jiaoda and Cotterell, Ryan and Sachan, Mrinmaya},
+  journal = {Transactions of the Association for Computational Linguistics},
+  volume  = {9},
+  pages   = {1442--1459},
+  year    = {2021},
+  note    = {[PDF] papers/3.pdf}
+}
+
+@inproceedings{budhraja2020weak,
+  title     = {On the Weak Link between Importance and Prunability of Attention Heads},
+  author    = {Budhraja, Aakriti and Pande, Madhura and Nema, Preksha and Kumar, Pratyush and Khapra, Mitesh M.},
+  booktitle = {Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  pages     = {3230--3235},
+  year      = {2020},
+  note      = {[PDF] papers/2020.emnlp-main.260.pdf}
+}
+
+% ---------------- dynamic / input-conditional pruning ----------------
+
+@article{han2021dynamic,
+  title   = {Dynamic Neural Networks: A Survey},
+  author  = {Han, Yizeng and Huang, Gao and Song, Shiji and Yang, Le and Wang, Honghui and Wang, Yulin},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume  = {44},
+  number  = {11},
+  pages   = {7436--7456},
+  year    = {2022},
+  note    = {arXiv:2102.04906}
+}
+
+@inproceedings{anagnostidis2023dynamic,
+  title     = {Dynamic Context Pruning for Efficient and Interpretable Autoregressive Transformers},
+  author    = {Anagnostidis, Sotiris and Pavllo, Dario and Biggio, Luca and Noci, Lorenzo and Lucchi, Aurelien and Hofmann, Thomas},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2023},
+  note      = {[PDF] papers/4.pdf}
+}
+
+@inproceedings{rao2021dynamicvit,
+  title     = {Dynamic{V}i{T}: Efficient Vision Transformers with Dynamic Token Sparsification},
+  author    = {Rao, Yongming and Zhao, Wenliang and Liu, Benlin and Lu, Jiwen and Zhou, Jie and Hsieh, Cho-Jui},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2021}
+}
+
+@inproceedings{wang2024smarttrim,
+  title     = {SmartTrim: Adaptive Tokens and Attention Pruning for Efficient Vision-Language Models},
+  author    = {Wang, Zekun and Chen, Jingchang and Zhou, Wangchunshu and Zhu, Haichao and Liang, Jiafeng and Shan, Liping and Liu, Ming and Xu, Dongliang and Yang, Qing and Qin, Bing},
+  booktitle = {Proceedings of LREC-COLING 2024},
+  pages     = {14937--14953},
+  year      = {2024},
+  note      = {[PDF] papers/2024.lrec-main.1300.pdf}
+}
+
+@article{jaradat2024hybrid,
+  title   = {Hybrid Dynamic Pruning: A Pathway to Efficient Transformer Inference},
+  author  = {Jaradat, Ghadeer A. and Tolba, Mohammed F. and Alsahli, Ghada and Saleh, Hani and Al-Qutayri, Mahmoud and Stouraitis, Thanos and Mohammad, Baker},
+  journal = {arXiv preprint arXiv:2407.12893},
+  year    = {2024},
+  note    = {[PDF] papers/2407.12893v1.pdf}
+}
+
+@inproceedings{jelcicova2022delta,
+  title     = {Delta Keyword Transformer: Bringing Transformers to the Edge through Dynamically Pruned Multi-Head Self-Attention},
+  author    = {Jel{\v{c}}icov{\'a}, Zuzana and Verhelst, Marian},
+  booktitle = {tinyML Research Symposium},
+  year      = {2022},
+  note      = {[PDF] papers/2204.03479v1.pdf}
+}
+
+@inproceedings{nguyen2025structured,
+  title     = {Structured Pruning for Diverse Best-of-{N} Reasoning Optimization},
+  author    = {Nguyen, Hieu Trung and Nguyen, Bao and Nguyen, Viet Anh},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2025},
+  pages     = {23911--23922},
+  year      = {2025},
+  note      = {[PDF] papers/2025.findings-acl.1225.pdf}
+}
+
+% ---------------- time-series forecasting ----------------
+
+@inproceedings{nie2023patchtst,
+  title     = {A Time Series is Worth 64 Words: Long-term Forecasting with Transformers},
+  author    = {Nie, Yuqi and Nguyen, Nam H. and Sinthong, Phanwadee and Kalagnanam, Jayant},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2023}
+}
+
+@inproceedings{liu2024itransformer,
+  title     = {i{T}ransformer: Inverted Transformers Are Effective for Time Series Forecasting},
+  author    = {Liu, Yong and Hu, Tengge and Zhang, Haoran and Wu, Haixu and Wang, Shiyu and Ma, Lintao and Long, Mingsheng},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024}
+}
+
+@inproceedings{zeng2023dlinear,
+  title     = {Are Transformers Effective for Time Series Forecasting?},
+  author    = {Zeng, Ailing and Chen, Muxi and Zhang, Lei and Xu, Qiang},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  year      = {2023}
+}
+
+@article{cleveland1990stl,
+  title   = {{STL}: A Seasonal-Trend Decomposition Procedure Based on Loess},
+  author  = {Cleveland, Robert B. and Cleveland, William S. and McRae, Jean E. and Terpenning, Irma},
+  journal = {Journal of Official Statistics},
+  volume  = {6},
+  number  = {1},
+  pages   = {3--73},
+  year    = {1990}
+}
+
+@article{hamilton1989regime,
+  title   = {A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle},
+  author  = {Hamilton, James D.},
+  journal = {Econometrica},
+  volume  = {57},
+  number  = {2},
+  pages   = {357--384},
+  year    = {1989}
+}
+
+@inproceedings{chen2024pathformer,
+  title     = {Pathformer: Multi-scale Transformers with Adaptive Pathways for Time Series Forecasting},
+  author    = {Chen, Peng and Zhang, Yingying and Cheng, Yunyao and Shu, Yang and Wang, Yihang and Wen, Qingsong and Yang, Bin and Guo, Chenjuan},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024}
+}
+
+% ---------------- pruning and retraining ----------------
+
+@inproceedings{frankle2019lottery,
+  title     = {The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks},
+  author    = {Frankle, Jonathan and Carbin, Michael},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2019}
+}

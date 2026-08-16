@@ -1,0 +1,110 @@
+% Methods — ReCAHS paper
+
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Models, data and protocol}
+\label{sec:methods-setup}
+Our primary model is PatchTST \citep{nie2023patchtst} with
+$d_{\text{model}}{=}128$, $d_{\text{ff}}{=}256$, $3$ encoder layers of
+$8$ heads ($H{=}24$ heads total), input length $336$, trained with the
+Time-Series-Library recipe (Adam, lr $10^{-4}$, batch $32$, $10$ epochs,
+early stopping patience $3$, lr halved per epoch). We evaluate on ETTh1,
+ETTh2, ETTm1 and Weather with prediction horizons
+$\{96,192,336,720\}$ and $5$ training seeds per cell
+($80$ models). As a generalization test we repeat the core pipeline on
+iTransformer \citep{liu2024itransformer} at horizon $96$ with the same
+capacity budget, noting that its heads attend across \emph{variates}
+rather than time. All experiments run in a single pinned environment
+(library commit, dataset and checkpoint hashes recorded); validation and
+test loaders are unshuffled so window indices align with regime labels.
+
+\subsection{Regime labels}
+\label{sec:methods-regimes}
+Each length-$336$ input window of the target variable is decomposed with
+robust STL \citep{cleveland1990stl} (period $=$ one day at the dataset's
+sampling rate). With component variances normalized to sum to one, the
+window's regime is the argmax of
+$(s_{\text{trend}}, s_{\text{seasonal}}, s_{\text{residual}})$, and the
+\emph{confidence margin} is the gap between the two largest scores.
+Labels are computed independently for train, validation and test splits;
+test regime mixes range from strongly trend-skewed (ETTh1: $93.6\%$
+trend) to strongly seasonal (Weather: $\geq 84\%$ seasonal).
+
+\subsection{Head masking and selection criteria}
+\label{sec:methods-selection}
+A head $(\ell,h)$ is deactivated by zeroing its attention output before
+the layer's output projection; this functional masking is numerically
+equivalent to structurally removing the head's parameter slices. All
+methods select masks on \emph{validation} data only:
+\begin{itemize}
+  \item \textbf{Independent importance (static).} Leave-one-out scoring
+  \citep{michel2019sixteen}: importance of $(\ell,h)$ is the increase in
+  validation MSE when it alone is masked; the lowest-scoring heads are
+  pruned. Removal order $=$ ascending importance.
+  \item \textbf{Joint greedy (pooled).} Greedy backward elimination
+  \citep{li2021differentiable}: starting from all heads, repeatedly
+  remove the head whose removal least harms validation MSE \emph{given
+  the removals so far}, on a fixed $256$-window validation subsample.
+  \item \textbf{Joint greedy (per-regime).} The same procedure restricted
+  to validation windows of one regime, yielding three specialist masks;
+  the dynamic policy applies the mask matching each window's detected
+  regime.
+  \item \textbf{Baselines.} Random head subsets ($3$ draws per seed) and
+  magnitude ranking by the $\ell_2$ norm of each head's projection
+  slices.
+\end{itemize}
+Removal orders are recorded down to $6$ remaining heads, so a mask at any
+sparsity in $\{12.5,25,37.5,50,62.5,75\}\%$ is a prefix; all methods are
+compared at matched sparsity. Every evaluation stores per-window test and
+validation losses, enabling all subsequent analyses --- routing, oracles,
+ensembling, statistics --- without re-running models.
+
+\subsection{Routing, oracle and ensembles}
+\label{sec:methods-routing}
+At $25\%$ sparsity the candidate set is
+$\mathcal{M}=\{$trend, seasonal, residual, pooled-greedy$\}$. The
+\textbf{oracle} routes each test window to its loss-minimizing mask
+(uses test targets; an upper bound, not a method). Deployable routers,
+all trained on validation only: (i)~hard STL routing;
+(ii)~a $12$-feature gradient-boosted \textbf{regime detector} replacing
+STL at inference; (iii)~\textbf{learned oracle-routers} --- argmin
+classification, per-mask loss regression, and centered (regret)
+regression with margin weighting; (iv)~\textbf{delayed-feedback}
+routing on observed regret of windows old enough for their targets to be
+available, and its sliding-window bandit variants;
+(v)~\textbf{regret-gated} deviation from the pooled mask. Failure causes
+are separated by three diagnostics: in-sample fits (capacity),
+a learning curve over $2.2$k--$27$k router-training windows using
+additionally computed \emph{train-split} mask losses (data), and
+fit-on-half-of-test plus routing from mean-pooled encoder
+representations (shift / feature poverty).
+
+\textbf{Ensembles} replace selection by combination: uniform averaging of
+the four masked predictions, the top-$2$ masks by validation MSE,
+weights $\propto$ inverse validation MSE, and \emph{soft regime routing}
+in which the detected regime's mask receives weight $\alpha$ (others
+share $1-\alpha$), with $\alpha{=}1$ recovering hard routing. A
+\textbf{diversity ablation} rebuilds the pool with greedy masks from
+random validation subsamples (no regime information) under identical
+settings.
+
+\subsection{Retraining}
+\label{sec:methods-scratch}
+To test whether pruning cost is intrinsic, the $25\%$ masks are imposed
+\emph{from initialization} and the model trained under the standard
+recipe (static mask; and a regime-conditional variant in which each
+training window applies its regime's mask). This complements the earlier
+finding that fine-tuning an already-converged checkpoint under the mask
+fails.
+
+\subsection{Statistical analysis}
+\label{sec:methods-stats}
+Within each cell, methods are compared by seed-paired differences
+(Wilcoxon) and across the $16$ cells by two-sided sign tests. Cell-level
+uncertainty uses a hierarchical circular moving-block bootstrap
+(resampling seeds and $96$-window blocks, $10^4$ replicates, $95\%$
+CIs). Regime dependence of head importance is tested by circular
+rotations of the regime-label sequence, which preserve temporal
+autocorrelation. Reported oracle-gain \emph{recovery} of a method $m$ is
+$(L_{\text{pooled}}-L_m)/(L_{\text{pooled}}-L_{\text{oracle}})$.

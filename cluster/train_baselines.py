@@ -11,8 +11,8 @@ from datetime import datetime, timezone
 
 import numpy as np
 
-from common import (TSLIB_DIR, TSLIB_COMMIT, DATA_DIR, DATASETS, cell_dir,
-                    sha256_file, build_args)
+from common import (TSLIB_DIR, TSLIB_COMMIT, DATA_DIR, DATASETS, MODEL_NAME,
+                    cell_dir, sha256_file, build_args)
 
 
 def train(dataset, pred_len, seed):
@@ -27,12 +27,13 @@ def train(dataset, pred_len, seed):
         print(f"{dataset} pred{pred_len} seed{seed}: already trained")
         return json.loads(meta_path.read_text())
 
-    model_id = f"{dataset}_{args.seq_len}_{pred_len}_dm128_h8_seed{seed}"
+    model_id = (f"{MODEL_NAME}_{dataset}_{args.seq_len}_{pred_len}"
+                f"_dm128_h8_seed{seed}")
     command = [
         sys.executable, "-u", "run.py",
         "--task_name", "long_term_forecast", "--is_training", "1",
         "--root_path", str(DATA_DIR) + "/", "--data_path", cfg["csv"],
-        "--model_id", model_id, "--model", "PatchTST",
+        "--model_id", model_id, "--model", MODEL_NAME,
         "--data", cfg["data_flag"], "--features", "M",
         "--seq_len", str(args.seq_len), "--label_len", str(args.label_len),
         "--pred_len", str(pred_len),

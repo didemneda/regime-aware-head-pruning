@@ -20,7 +20,9 @@ import torch.nn as nn
 RECAHS_ROOT = Path(os.environ.get("RECAHS_ROOT", Path.home() / "recahs"))
 TSLIB_DIR = RECAHS_ROOT / "tslib"
 DATA_DIR = RECAHS_ROOT / "data"
-RUNS_DIR = RECAHS_ROOT / "runs"
+# Model under study; a separate runs tree per model keeps results isolated.
+MODEL_NAME = os.environ.get("RECAHS_MODEL", "PatchTST")
+RUNS_DIR = RECAHS_ROOT / os.environ.get("RECAHS_RUNS_SUBDIR", "runs")
 TSLIB_COMMIT = "4e938a1767106324dd753b2a44832bf870a0252e"
 
 SEEDS = [7, 42, 1234, 2026, 3407]
@@ -351,9 +353,10 @@ def magnitude_removal_order(model):
 
 
 def build_model(dataset, pred_len, checkpoint, device):
-    from models.PatchTST import Model as PatchTSTModel
+    import importlib
+    model_cls = importlib.import_module(f"models.{MODEL_NAME}").Model
     args = build_args(dataset, pred_len)
-    model = PatchTSTModel(args).to(device)
+    model = model_cls(args).to(device)
     state = torch.load(checkpoint, map_location=device, weights_only=True)
     model.load_state_dict(state)
     model.eval()

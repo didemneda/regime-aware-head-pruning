@@ -1,0 +1,34 @@
+% Abstract — ReCAHS paper
+% Every number is traceable to cluster_results/runs/analysis/.
+
+\begin{abstract}
+Attention-head pruning methods almost universally score each head with a
+single global importance value, and input-adaptive alternatives are
+typically compared against static baselines that differ in \emph{both} the
+selection criterion and the adaptivity --- leaving the source of any gain
+unidentified. We present a controlled study of regime-conditional head
+selection for time-series Transformers, using STL-derived
+trend/seasonal/residual regimes on PatchTST across 4~datasets,
+4~horizons, 5~seeds and 6~sparsity levels. Three findings emerge. First,
+the standard global importance ranking is fragile: at realistic sparsity
+it degrades sharply and is beaten by \emph{random} pruning on
+minute-resolution data, whereas greedy backward elimination remains within
+${\sim}1\%$ of the unpruned model at $25\%$ sparsity --- and with the mask
+imposed from scratch during training, this pruning becomes free. Second,
+regime-\emph{routing} adds nothing once the criterion is controlled: a
+pooled greedy mask matches or beats regime-routed masks, and although a
+per-window oracle over the regime masks outperforms even the unpruned
+model in 15/16 cells, twelve deployable routers fail to capture this
+headroom. Near-oracle in-sample fits, flat learning curves and failed
+zero-shift diagnostics show the per-window optimal mask is aleatoric at
+inference time. Third, the headroom is partially recoverable without
+selection: \emph{averaging} the specialist masks' predictions beats the
+best static mask on all four datasets and surpasses the unpruned model on
+two --- an effect driven by mask diversity, for which regime partitioning
+is the strongest, but not a necessary, source. On iTransformer's
+cross-variate attention the criterion and ensemble findings replicate,
+head redundancy is far larger, and --- unlike temporal attention --- a
+small regime-routing benefit survives the control, marking a precise
+architecture boundary. We release per-window losses for every
+configuration to support further routing research.
+\end{abstract}

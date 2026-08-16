@@ -1,0 +1,74 @@
+% Related Work section — ReCAHS paper
+% Compile with natbib (\usepackage{natbib}) and sections/references.bib
+% Every claim about a cited paper was checked against the PDF in papers/.
+
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Attention-head redundancy and static pruning.}
+The observation that multi-head attention is heavily over-provisioned dates
+to \citet{michel2019sixteen}, who scored each head by the change in loss
+when it is masked and showed that a large fraction of heads in NMT and BERT
+models can be removed with little degradation. \citet{voita2019analyzing}
+reached a similar conclusion with $L_0$-regularized stochastic gates,
+additionally showing that the surviving heads play specialized, interpretable
+roles. Subsequent work complicated this picture in two ways that our study
+builds on directly. \citet{li2021differentiable} recast head pruning as a
+\emph{subset-selection} problem and showed that the greedy, per-head scoring
+of \citet{michel2019sixteen} systematically underestimates how many heads can
+be removed, because it ignores interactions between heads.
+\citet{budhraja2020weak} showed that the link between measured head
+importance and actual prunability is weak: randomly chosen head subsets often
+match importance-guided ones. Our results transport both critiques to
+time-series forecasting and sharpen them with a controlled comparison: a
+single mask chosen by \emph{joint} greedy elimination is robust across
+sparsity levels, whereas the standard independent importance ranking is
+fragile enough to be beaten by random pruning on minute-resolution data.
+
+\paragraph{Dynamic and input-conditional pruning.}
+A parallel line makes the pruning decision depend on the input, a special
+case of conditional computation \citep{han2021dynamic}. Token-level examples
+include learnable context dropping in autoregressive LLMs
+\citep{anagnostidis2023dynamic} and dynamic token sparsification in vision
+Transformers \citep{rao2021dynamicvit}. Closer to our setting are methods
+that adapt \emph{head} usage per instance: SmartTrim prunes tokens and heads
+per input in vision--language models \citep{wang2024smarttrim}, hybrid
+dynamic pruning detects and skips unimportant heads at run time in
+hardware \citep{jaradat2024hybrid}, delta-based reuse exploits temporal
+stability of neighbouring inputs on edge devices
+\citep{jelcicova2022delta}, and SPRINT selects which heads to prune
+per query, showing that targeted head removal can even \emph{improve}
+task performance \citep{nguyen2025structured}. These works report gains of
+input-conditional sparsity over static baselines, but none of them controls
+for the selection criterion: the dynamic method and the static baseline
+typically differ both in \emph{how} masks are chosen and in \emph{whether}
+they adapt. Our study separates these factors and finds that, for
+regime-conditioned head selection in forecasting Transformers, the criterion
+explains essentially all of the gain --- while an oracle over the same
+per-regime masks shows that input-conditional selection retains substantial
+untapped headroom, which none of five deployable routers recovers.
+
+\paragraph{Transformers for long-term time-series forecasting.}
+Our base model is PatchTST \citep{nie2023patchtst}, which applies
+channel-independent patch attention and is a strong, widely used LTSF
+baseline; iTransformer \citep{liu2024itransformer} instead attends across
+variates, and linear models remain competitive on standard benchmarks
+\citep{zeng2023dlinear}, which cautions against purely architectural claims
+and motivates our efficiency framing. Structure-aware decomposition has a
+long history in classical time-series analysis: STL \citep{cleveland1990stl}
+separates trend, seasonal and remainder components, and regime-switching
+models date back to \citet{hamilton1989regime}. Within deep forecasting,
+adaptivity to temporal structure appears as architecture-level routing,
+e.g.\ multi-scale adaptive pathways in Pathformer \citep{chen2024pathformer}.
+We connect these threads at the level of \emph{structural sparsity}: STL
+regimes define the conditioning signal, and head masks --- not architecture
+--- are what adapts.
+
+\paragraph{Pruning and retraining.}
+Finally, our finding that masked-from-scratch training recovers (and on
+ETTm1 exceeds) the unpruned baseline, while post-hoc fine-tuning of a
+converged model fails, echoes the lottery-ticket literature
+\citep{frankle2019lottery}: the value of a sparsity pattern depends on when
+in training it is imposed. We did not search for winning initializations;
+we only show that at $25\%$ head sparsity the pattern found on a converged
+model is trainable from scratch at no accuracy cost.
